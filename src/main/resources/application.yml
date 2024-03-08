@@ -1,0 +1,45 @@
+server:
+  port: ${SERVER_PORT:8090}
+  shutdown: graceful
+
+spring:
+  main:
+    banner-mode: off
+  webflux:
+    base-path: /api/v1
+  application:
+    name: mc-accounts
+  profiles:
+    active: ${SPRING_PROFILES_ACTIVE:dev}
+
+management:
+  endpoint:
+    health:
+      show-details: always
+  endpoints:
+    web:
+      exposure:
+        include: "info,health,circuitbreakers"
+  health:
+    circuitbreakers:
+      enabled: true
+
+resilience4j.circuitbreaker:
+  instances:
+    assessments-client:
+      register-health-indicator: true
+      minimum-number-of-calls: 3
+      sliding-window-type: TIME_BASED
+      sliding-window-size: 6
+      permitted-number-of-calls-in-half-open-state: 3
+
+integrations:
+  apis:
+    basePathCustomers: ${APIS_BASE_PATH_CUSTOMERS:http://localhost:8091}
+    basePathBacen: ${APIS_BASE_PATH_BACEN:http://localhost:8092}
+
+logging:
+  level:
+    root: ${LOGGING_LEVEL_ROOT:INFO}
+  pattern:
+    console: "[%thread][%highlight(%-5level)][%cyan(%d{yyyy-MM-dd HH:mm:ss})][%yellow(%X{requestId})][%magenta(%logger{40})] - %message%n"
