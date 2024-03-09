@@ -1,6 +1,7 @@
 package andrelsf.github.com.mcaccounts.services.clients;
 
 import andrelsf.github.com.mcaccounts.api.http.responses.CustomerResponse;
+import andrelsf.github.com.mcaccounts.services.CustomerClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -8,10 +9,10 @@ import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
 @Component
-public class CustomerClient {
+public class CustomerClientImpl implements CustomerClient {
 
   private static final String URI_CUSTOMERS;
-  private final Logger logger = LoggerFactory.getLogger(CustomerClient.class);
+  private final Logger logger = LoggerFactory.getLogger(CustomerClientImpl.class);
 
   static {
     URI_CUSTOMERS = "/customers";
@@ -19,7 +20,7 @@ public class CustomerClient {
 
   private final WebClient apiCustomers;
 
-  public CustomerClient(WebClient apiCustomers) {
+  public CustomerClientImpl(WebClient apiCustomers) {
     this.apiCustomers = apiCustomers;
   }
 
