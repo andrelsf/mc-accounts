@@ -35,8 +35,8 @@ resilience4j.circuitbreaker:
 
 integrations:
   apis:
-    basePathCustomers: ${APIS_BASE_PATH_CUSTOMERS:http://localhost:8091}
-    basePathBacen: ${APIS_BASE_PATH_BACEN:http://localhost:8092}
+    baseUrlCustomers: ${APIS_BASE_PATH_CUSTOMERS:http://localhost:8091}
+    baseUrlBacen: ${APIS_BASE_PATH_BACEN:http://localhost:8092}
 
 logging:
   level:
