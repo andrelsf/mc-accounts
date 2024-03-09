@@ -1,0 +1,61 @@
+databaseChangeLog:
+  - changeSet:
+      id: V002
+      labels: "inserts_accounts"
+      author: "andre.dev.linux@gmail.com"
+      comment: "Inserts into table accounts"
+      changes:
+        - insert:
+            tableName: accounts
+            catalogName: accounts
+            dbms: 'postgresql'
+            schemaName: public
+            columns:
+              - column:
+                  name: account_id
+                  value: "e44c4c6047c74fb09af014dd1eb97818"
+              - column:
+                  name: customer_id
+                  value: "0ab4165471c445918697d3d620b0db2b"
+              - column:
+                  name: agency
+                  value: 1234
+              - column:
+                  name: account_number
+                  value: 01230019
+              - column:
+                  name: status
+                  value: "ACTIVE"
+              - column:
+                  name: daily_transfer_limit
+                  value: 1000.00
+              - column:
+                  name: balance
+                  value: 2000.00
+        - insert:
+            tableName: accounts
+            catalogName: accounts
+            dbms: 'postgresql'
+            schemaName: public
+            columns:
+              - column:
+                  name: account_id
+                  value: "a137cf80bbb64c2db07c57a8a8446f5e"
+              - column:
+                  name: customer_id
+                  value: "0ab4165471c445918697d3d620b0db2a"
+              - column:
+                  name: agency
+                  value: 4321
+              - column:
+                  name: account_number
+                  value: 03210027
+              - column:
+                  name: status
+                  value: "ACTIVE"
+              - column:
+                  name: daily_transfer_limit
+                  value: 1000.00
+              - column:
+                  name: balance
+                  value: 3000.00

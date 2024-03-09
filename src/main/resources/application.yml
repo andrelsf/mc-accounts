@@ -11,6 +11,16 @@ spring:
     name: mc-accounts
   profiles:
     active: ${SPRING_PROFILES_ACTIVE:dev}
+  r2dbc:
+    url: ${SPRING_R2DBC_URL:r2dbc:postgresql://localhost:5432/accounts}
+    username: ${SPRING_R2DBC_USERNAME:accounts-user}
+    password: ${SPRING_R2DBC_PWD:4cc0unt5P4ssw0rd!123}
+  liquibase:
+    enabled: ${SPRING_LIQUIBASE_ENABLED:true}
+    change-log: "liquibase/changelog.yml"
+    url: ${SPRING_LIQUIBASE_URL:jdbc:postgresql://localhost:5432/accounts}
+    user: ${SPRING_LIQUIBASE_USERNAME:accounts-user}
+    password: ${SPRING_LIQUIBASE_PWD:4cc0unt5P4ssw0rd!123}
 
 management:
   endpoint:
@@ -26,7 +36,7 @@ management:
 
 resilience4j.circuitbreaker:
   instances:
-    assessments-client:
+    accounts-client:
       register-health-indicator: true
       minimum-number-of-calls: 3
       sliding-window-type: TIME_BASED

@@ -20,10 +20,10 @@ public class AccountHandler {
   public Mono<ServerResponse> getBalance(final ServerRequest request) {
     final String customerId = request.pathVariable("customerId");
     return customerService.checkAccountBalance(customerId)
-        .flatMap(customerResponse ->
+        .flatMap(balanceResponse ->
             ServerResponse.ok()
                 .contentType(MediaType.APPLICATION_JSON)
-                .body(BodyInserters.fromValue(customerResponse)))
+                .body(BodyInserters.fromValue(balanceResponse)))
         .switchIfEmpty(ServerResponse.notFound().build())
         .log();
   }

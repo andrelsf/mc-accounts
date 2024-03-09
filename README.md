@@ -4,6 +4,9 @@ Acoes:
  - Consulta saldo
  - Transferencias
 
+GET : /accounts/{customerId}/balance
+POST: /accounts/{customerId}/transfers
+
 ### Reference Documentation
 For further reference, please consider the following sections:
 

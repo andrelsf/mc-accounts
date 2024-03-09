@@ -1,0 +1,14 @@
+<configuration scan="true" scanPeriod="30 seconds">
+  <property name="DEFAULT_PATTERN"
+    value="[%thread][%highlight(%-5level)][%cyan(%d{yyyy-MM-dd HH:mm:ss})][%yellow(%X{requestId})][%magenta(%logger{40})] - %message%n"/>
+
+  <appender name="ConsoleAppender" class="ch.qos.logback.core.ConsoleAppender">
+    <encoder>
+      <Pattern>${DEFAULT_PATTERN}</Pattern>
+    </encoder>
+  </appender>
+
+  <root level="INFO">
+    <appender-ref ref="ConsoleAppender"/>
+  </root>
+</configuration>

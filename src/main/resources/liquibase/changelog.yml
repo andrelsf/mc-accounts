@@ -1,0 +1,5 @@
+databaseChangeLog:
+  - include:
+      file: liquibase/migrations/V001-CREATE-TABLE-ACCOUNTS.yml
+  - include:
+      file: liquibase/migrations/V002-INSERT-INTO-ACCOUNTS.yml

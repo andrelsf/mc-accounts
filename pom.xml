@@ -30,6 +30,34 @@
 			<artifactId>spring-boot-starter-webflux</artifactId>
 		</dependency>
 
+		<!-- Spring Data R2DBC -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-r2dbc</artifactId>
+			<version>3.2.2</version>
+		</dependency>
+
+		<!-- PostgreSQL R2DBC -->
+		<dependency>
+			<groupId>org.postgresql</groupId>
+			<artifactId>r2dbc-postgresql</artifactId>
+			<scope>runtime</scope>
+			<version>1.0.2.RELEASE</version>
+		</dependency>
+
+		<!-- Driver PostgreSQL -->
+		<dependency>
+			<groupId>org.postgresql</groupId>
+			<artifactId>postgresql</artifactId>
+			<scope>runtime</scope>
+		</dependency>
+
+		<!-- Database Migration Liquibase -->
+		<dependency>
+			<groupId>org.liquibase</groupId>
+			<artifactId>liquibase-core</artifactId>
+		</dependency>
+
 		<!-- ACTUATOR -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
