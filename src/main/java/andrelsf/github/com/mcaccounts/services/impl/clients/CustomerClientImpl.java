@@ -1,7 +1,7 @@
-package andrelsf.github.com.mcaccounts.services.clients;
+package andrelsf.github.com.mcaccounts.services.impl.clients;
 
 import andrelsf.github.com.mcaccounts.api.http.responses.CustomerResponse;
-import andrelsf.github.com.mcaccounts.services.CustomerClient;
+import andrelsf.github.com.mcaccounts.services.impl.validator.CustomerClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;

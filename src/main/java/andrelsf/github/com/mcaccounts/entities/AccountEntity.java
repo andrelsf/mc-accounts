@@ -10,7 +10,7 @@ import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
 
 
-@Table("accounts")
+@Table(name = "accounts")
 public class AccountEntity {
 
   @Id
@@ -160,5 +160,32 @@ public class AccountEntity {
   public int hashCode() {
     return Objects.hash(accountId, customerId, agency, accountNumber, status, dailyTransferLimit,
         balance, createdAt, lastUpdated);
+  }
+
+  @Override
+  public String toString() {
+    return "AccountEntity{" +
+        "accountId='" + accountId + '\'' +
+        ", customerId='" + customerId + '\'' +
+        ", agency=" + agency +
+        ", accountNumber=" + accountNumber +
+        ", status='" + status + '\'' +
+        ", dailyTransferLimit=" + dailyTransferLimit +
+        ", balance=" + balance +
+        ", createdAt=" + createdAt +
+        ", lastUpdated=" + lastUpdated +
+        '}';
+  }
+
+  public void debit(BigDecimal amount) {
+    this.balance = this.balance.subtract(amount);
+  }
+
+  public void credit(BigDecimal amount) {
+    this.balance = this.balance.add(amount);
+  }
+
+  public void decreaseDailyTransferLimit(BigDecimal amount) {
+    this.dailyTransferLimit = this.dailyTransferLimit.subtract(amount);
   }
 }
