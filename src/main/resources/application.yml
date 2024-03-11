@@ -36,7 +36,7 @@ management:
 
 resilience4j.circuitbreaker:
   instances:
-    accounts-client:
+    bacen-client:
       register-health-indicator: true
       minimum-number-of-calls: 3
       sliding-window-type: TIME_BASED
@@ -46,7 +46,7 @@ resilience4j.circuitbreaker:
 integrations:
   apis:
     baseUrlCustomers: ${APIS_BASE_PATH_CUSTOMERS:http://localhost:8091}
-    baseUrlBacen: ${APIS_BASE_PATH_BACEN:http://localhost:8092}
+    baseUrlBacen: ${APIS_BASE_PATH_BACEN:http://localhost:8091}
 
 logging:
   level:

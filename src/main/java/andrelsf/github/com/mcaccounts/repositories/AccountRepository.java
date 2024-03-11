@@ -13,7 +13,6 @@ public interface AccountRepository extends ReactiveCrudRepository<AccountEntity,
   Mono<AccountEntity> findAccountEntityByCustomerIdAndStatusIs(final String customerId, final String status);
   Mono<AccountEntity> findAccountEntityByAgencyAndAccountNumberAndStatusIs(
       final Integer agency, final Integer accountNumber, final String status);
-
   Mono<AccountEntity> findAccountEntityByCustomerIdAndBalanceGreaterThanEqualAndDailyTransferLimitGreaterThanEqualAndStatusIs(
       final String customerId, final BigDecimal amountBalance, final BigDecimal amountDailyTransferLimit, final String status);
 
