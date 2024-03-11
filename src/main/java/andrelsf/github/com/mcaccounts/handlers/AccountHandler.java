@@ -1,8 +1,9 @@
 package andrelsf.github.com.mcaccounts.handlers;
 
 import andrelsf.github.com.mcaccounts.api.http.requests.PostTransferRequest;
-import andrelsf.github.com.mcaccounts.services.CustomerService;
-import andrelsf.github.com.mcaccounts.services.impl.RequestValidator;
+import andrelsf.github.com.mcaccounts.services.AccountService;
+import andrelsf.github.com.mcaccounts.services.impl.validator.RequestValidator;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.BodyInserters;
@@ -11,19 +12,20 @@ import org.springframework.web.reactive.function.server.ServerResponse;
 import reactor.core.publisher.Mono;
 
 @Service
+@ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.REACTIVE)
 public class AccountHandler {
 
-  private final CustomerService customerService;
+  private final AccountService accountService;
   private final RequestValidator requestValidator;
 
-  public AccountHandler(CustomerService customerService, RequestValidator requestValidator) {
-    this.customerService = customerService;
+  public AccountHandler(AccountService accountService, RequestValidator requestValidator) {
+    this.accountService = accountService;
     this.requestValidator = requestValidator;
   }
 
   public Mono<ServerResponse> getBalance(final ServerRequest request) {
     final String customerId = request.pathVariable("customerId");
-    return customerService.checkAccountBalance(customerId)
+    return accountService.checkAccountBalance(customerId)
         .flatMap(balanceResponse ->
             ServerResponse.ok()
                 .contentType(MediaType.APPLICATION_JSON)
@@ -37,7 +39,7 @@ public class AccountHandler {
         .doOnNext(requestValidator::validate)
         .cast(PostTransferRequest.class)
         .flatMap(postTransferRequest ->
-            customerService.doTransfer(customerId, postTransferRequest))
+            accountService.doTransfer(customerId, postTransferRequest))
         .flatMap(transferResponse ->
             ServerResponse.ok()
                 .contentType(MediaType.APPLICATION_JSON)

@@ -1,4 +1,4 @@
-package andrelsf.github.com.mcaccounts.services.impl.validator;
+package andrelsf.github.com.mcaccounts.services;
 
 import andrelsf.github.com.mcaccounts.api.http.responses.CustomerResponse;
 import reactor.core.publisher.Mono;

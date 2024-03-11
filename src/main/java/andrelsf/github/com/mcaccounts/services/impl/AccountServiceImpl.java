@@ -7,8 +7,8 @@ import andrelsf.github.com.mcaccounts.api.http.responses.BalanceResponse;
 import andrelsf.github.com.mcaccounts.api.http.responses.TransferResponse;
 import andrelsf.github.com.mcaccounts.entities.AccountEntity;
 import andrelsf.github.com.mcaccounts.repositories.AccountRepository;
-import andrelsf.github.com.mcaccounts.services.CustomerService;
-import andrelsf.github.com.mcaccounts.services.impl.validator.CustomerClient;
+import andrelsf.github.com.mcaccounts.services.AccountService;
+import andrelsf.github.com.mcaccounts.services.CustomerClient;
 import andrelsf.github.com.mcaccounts.utils.Mapper;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -21,14 +21,14 @@ import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Schedulers;
 
 @Service
-public class CustomerServiceImpl implements CustomerService {
+public class AccountServiceImpl implements AccountService {
 
-  private final static Logger logger = LoggerFactory.getLogger(CustomerServiceImpl.class);
+  private final static Logger logger = LoggerFactory.getLogger(AccountServiceImpl.class);
 
   private final AccountRepository repository;
   private final CustomerClient customerClient;
 
-  public CustomerServiceImpl(
+  public AccountServiceImpl(
       AccountRepository repository,
       CustomerClient customerClient) {
     this.repository = repository;

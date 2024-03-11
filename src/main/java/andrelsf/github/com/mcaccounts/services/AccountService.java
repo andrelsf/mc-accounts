@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
 @Service
-public interface CustomerService {
+public interface AccountService {
 
   Mono<BalanceResponse> checkAccountBalance(final String customerId);
   Mono<TransferResponse> doTransfer(final String customerId, final PostTransferRequest postTransferRequest);
