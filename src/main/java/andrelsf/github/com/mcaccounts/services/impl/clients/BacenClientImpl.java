@@ -5,6 +5,7 @@ import andrelsf.github.com.mcaccounts.handlers.exceptions.IntegrationException;
 import andrelsf.github.com.mcaccounts.services.BacenClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.cloud.client.circuitbreaker.ReactiveCircuitBreaker;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.ClientResponse;
@@ -17,15 +18,19 @@ public class BacenClientImpl implements BacenClient {
 
   private final Logger logger = LoggerFactory.getLogger(BacenClient.class);
   private static final String URI_BACEN;
+  private static final String BACEN_ERROR_MESSAGE;
 
   static {
     URI_BACEN = "/api/v1/bacen/notifications";
+    BACEN_ERROR_MESSAGE = "Error while performing the notification Bacen. {}";
   }
 
   private final WebClient apiBacen;
+  private final ReactiveCircuitBreaker apiBacenCircuitBreaker;
 
-  public BacenClientImpl(WebClient apiBacen) {
+  public BacenClientImpl(WebClient apiBacen, ReactiveCircuitBreaker apiBacenCircuitBreaker) {
     this.apiBacen = apiBacen;
+    this.apiBacenCircuitBreaker = apiBacenCircuitBreaker;
   }
 
   @Override
@@ -36,9 +41,16 @@ public class BacenClientImpl implements BacenClient {
         .retrieve()
         .onStatus(HttpStatusCode::isError, this::postNotificationError)
         .bodyToMono(Void.class)
+        .transform(object ->
+            apiBacenCircuitBreaker.run(object, this::postNotificationFallback))
         .publishOn(Schedulers.boundedElastic())
         .doOnError(throwable ->
-            logger.error("Error while performing the notification Bacen. {}", throwable.getMessage()));
+            logger.error(BACEN_ERROR_MESSAGE, throwable.getMessage()));
+  }
+
+  private Mono<Void> postNotificationFallback(Throwable te) {
+    logger.warn("Method fallback called. {}", te.getMessage());
+    return Mono.empty();
   }
 
   private Mono<? extends Throwable> postNotificationError(ClientResponse clientResponse) {

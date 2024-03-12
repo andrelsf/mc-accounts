@@ -34,15 +34,6 @@ management:
     circuitbreakers:
       enabled: true
 
-resilience4j.circuitbreaker:
-  instances:
-    bacen-client:
-      register-health-indicator: true
-      minimum-number-of-calls: 3
-      sliding-window-type: TIME_BASED
-      sliding-window-size: 6
-      permitted-number-of-calls-in-half-open-state: 3
-
 integrations:
   apis:
     baseUrlCustomers: ${APIS_BASE_PATH_CUSTOMERS:http://localhost:8091}
