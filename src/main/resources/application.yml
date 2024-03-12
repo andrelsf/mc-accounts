@@ -34,6 +34,14 @@ management:
     circuitbreakers:
       enabled: true
 
+circuit-breakers:
+  api-bacen:
+    slidingWindowSize: ${CB_API_BACEN_SWS:6}
+    minimumNumberOfCalls: ${CB_API_BACEN_MNOC:3}
+    failureRateThreshold: ${CB_API_BACEN_FRT:50.0}
+    permittedNumberOfCallsInHalfOpenState: ${CB_API_BACEN_PNOCIHOS:3}
+    waitDurationInOpenState: ${CB_API_BACEN_WDIOS:10}
+
 integrations:
   apis:
     baseUrlCustomers: ${APIS_BASE_PATH_CUSTOMERS:http://localhost:8091}

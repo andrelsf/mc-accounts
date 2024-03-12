@@ -24,15 +24,22 @@ public class CircuitBreakerConfiguration {
 
   private final static Logger logger = LoggerFactory.getLogger(CircuitBreakerConfiguration.class);
 
+  private final BacenCircuitBreakerConfiguration bacenConfig;
+
+  public CircuitBreakerConfiguration(BacenCircuitBreakerConfiguration bacenConfig) {
+    this.bacenConfig = bacenConfig;
+  }
+
   @Bean
   public Customizer<ReactiveResilience4JCircuitBreakerFactory> bacenCircuitBreaker() {
     final CircuitBreakerConfig config = CircuitBreakerConfig.custom()
         .slidingWindowType(COUNT_BASED)
-        .slidingWindowSize(10)
-        .minimumNumberOfCalls(5)
-        .failureRateThreshold(50.0f)
-        .permittedNumberOfCallsInHalfOpenState(3)
-        .waitDurationInOpenState(Duration.ofSeconds(10))
+        .slidingWindowSize(bacenConfig.getSlidingWindowSize())
+        .minimumNumberOfCalls(bacenConfig.getMinimumNumberOfCalls())
+        .failureRateThreshold(bacenConfig.getFailureRateThreshold())
+        .permittedNumberOfCallsInHalfOpenState(
+            bacenConfig.getPermittedNumberOfCallsInHalfOpenState())
+        .waitDurationInOpenState(Duration.ofSeconds(bacenConfig.getWaitDurationInOpenState()))
         .build();
     return factory -> {
       factory.configure(builder -> builder.circuitBreakerConfig(config)
@@ -43,8 +50,7 @@ public class CircuitBreakerConfiguration {
   }
 
   @Bean
-  public ReactiveCircuitBreaker apiBacenCircuitBreaker(
-      ReactiveCircuitBreakerFactory reactiveCircuitBreakerFactory) {
+  public ReactiveCircuitBreaker apiBacenCircuitBreaker(ReactiveCircuitBreakerFactory reactiveCircuitBreakerFactory) {
     return reactiveCircuitBreakerFactory.create("apiBacen");
   }
 
