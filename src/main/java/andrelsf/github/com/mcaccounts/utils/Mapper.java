@@ -24,13 +24,11 @@ public class Mapper {
   }
 
   public static TransferResponse entitiesToTransferResponse(
-      final String transactionId,
       final AccountEntity fromAccount,
       final AccountEntity toAccount,
       final BigDecimal amount,
       final String transferDate) {
     return new TransferResponse(
-        transactionId,
         new FromAccountResponse(fromAccount.getAgency(), fromAccount.getAccountNumber()),
         new ToAccountResponse(toAccount.getAgency(), toAccount.getAccountNumber()),
         amount,

@@ -38,8 +38,7 @@ public class AccountHandler {
     return request.bodyToMono(PostTransferRequest.class)
         .doOnNext(requestValidator::validate)
         .cast(PostTransferRequest.class)
-        .flatMap(postTransferRequest ->
-            accountService.doTransfer(customerId, postTransferRequest))
+        .flatMap(postTransferRequest -> accountService.doTransfer(customerId, postTransferRequest))
         .flatMap(transferResponse ->
             ServerResponse.ok()
                 .contentType(MediaType.APPLICATION_JSON)

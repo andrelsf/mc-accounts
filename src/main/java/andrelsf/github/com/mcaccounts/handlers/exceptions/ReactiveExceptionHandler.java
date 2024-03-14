@@ -1,5 +1,7 @@
 package andrelsf.github.com.mcaccounts.handlers.exceptions;
 
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
+import static org.springframework.http.HttpStatus.NOT_FOUND;
 import static org.springframework.http.HttpStatus.UNPROCESSABLE_ENTITY;
 
 import org.slf4j.Logger;
@@ -45,14 +47,16 @@ public class ReactiveExceptionHandler extends AbstractErrorWebExceptionHandler {
 
   private Mono<ServerResponse> errorResponse(ServerRequest request) {
     final Throwable error = getError(request);
-
     return switch (error.getClass().getSimpleName()) {
-      case "InputException" -> getServerResponse(
-          HttpStatus.BAD_REQUEST, ((InputException) error).getErrors());
-      case "UnableToTransfer", "ToAccountNotFoundException" -> getServerResponse(
-          UNPROCESSABLE_ENTITY, new ApiError(UNPROCESSABLE_ENTITY.value(), error.getMessage()));
-      default -> getServerResponse(
-          httpStatusDefault, new ApiError(httpStatusDefault.value(), "Contact Sysadmin."));
+      case "AccountNotFoundException" ->
+          getServerResponse(NOT_FOUND, new ApiError(NOT_FOUND.value(), error.getMessage()));
+      case "InputException" ->
+          getServerResponse(BAD_REQUEST, ((InputException) error).getErrors());
+      case "UnableToTransfer",
+          "ToAccountNotFoundException" ->
+          getServerResponse(UNPROCESSABLE_ENTITY, new ApiError(UNPROCESSABLE_ENTITY.value(), error.getMessage()));
+      default ->
+          getServerResponse(httpStatusDefault, new ApiError(httpStatusDefault.value(), "Contact Sysadmin."));
     };
   }
 

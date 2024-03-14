@@ -16,9 +16,9 @@ public class AccountResource {
   @Bean
   RouterFunction<ServerResponse> routes(final AccountHandler accountHandler) {
     return RouterFunctions.route()
-        .path("/accounts", builder -> builder
-            .GET("/{customerId}/balance", accept(APPLICATION_JSON), accountHandler::getBalance)
-            .POST("/{customerId}/transfers", accept(APPLICATION_JSON), accountHandler::postTransfers)
+        .path("/accounts/{customerId}", builder -> builder
+            .GET("/balance", accept(APPLICATION_JSON), accountHandler::getBalance)
+            .POST("/transfers", accept(APPLICATION_JSON), accountHandler::postTransfers)
         ).build();
   }
 }

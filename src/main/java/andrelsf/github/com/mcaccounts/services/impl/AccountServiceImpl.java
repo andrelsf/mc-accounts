@@ -3,6 +3,8 @@ package andrelsf.github.com.mcaccounts.services.impl;
 import static andrelsf.github.com.mcaccounts.entities.domains.AccountStatus.ACTIVE;
 import static andrelsf.github.com.mcaccounts.entities.events.QueueType.DLQ;
 import static andrelsf.github.com.mcaccounts.entities.events.StatusMessage.PENDING;
+import static andrelsf.github.com.mcaccounts.utils.ApiUtils.getLocalDateTimeNow;
+import static andrelsf.github.com.mcaccounts.utils.Mapper.entitiesToTransferResponse;
 import static reactor.core.publisher.Mono.error;
 
 import andrelsf.github.com.mcaccounts.api.http.requests.PostTransferRequest;
@@ -10,6 +12,7 @@ import andrelsf.github.com.mcaccounts.api.http.responses.BalanceResponse;
 import andrelsf.github.com.mcaccounts.api.http.responses.TransferResponse;
 import andrelsf.github.com.mcaccounts.entities.domains.AccountEntity;
 import andrelsf.github.com.mcaccounts.entities.events.InputMessage;
+import andrelsf.github.com.mcaccounts.handlers.exceptions.AccountNotFoundException;
 import andrelsf.github.com.mcaccounts.handlers.exceptions.ToAccountNotFoundException;
 import andrelsf.github.com.mcaccounts.handlers.exceptions.UnableToTransfer;
 import andrelsf.github.com.mcaccounts.repositories.AccountRepository;
@@ -20,7 +23,6 @@ import andrelsf.github.com.mcaccounts.services.QueueService;
 import andrelsf.github.com.mcaccounts.utils.Mapper;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.UUID;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import reactor.core.publisher.Mono;
@@ -49,6 +51,7 @@ public class AccountServiceImpl implements AccountService {
   @Transactional(readOnly = true)
   public Mono<BalanceResponse> checkAccountBalance(final String customerId) {
     return repository.findAccountEntityByCustomerIdAndStatusIs(customerId, ACTIVE.name())
+        .switchIfEmpty(error(new AccountNotFoundException("Account not found by customerId=".concat(customerId))))
         .zipWith(customerClient.getCustomerById(customerId))
         .map(tuple -> Mapper.entityToBalanceResponse(tuple.getT1(), tuple.getT2()));
   }
@@ -69,9 +72,7 @@ public class AccountServiceImpl implements AccountService {
         )
         .publishOn(Schedulers.boundedElastic())
         .flatMap(tuple -> {
-          final String transactionId = UUID.randomUUID().toString();
-          final LocalDateTime transferDate = LocalDateTime.now();
-
+          final LocalDateTime transferDate = getLocalDateTimeNow();
           AccountEntity fromAccount = tuple.getT1();
           fromAccount.debit(request.amount(), transferDate);
           fromAccount.decreaseDailyTransferLimit(request.amount());
@@ -83,8 +84,7 @@ public class AccountServiceImpl implements AccountService {
               .publishOn(Schedulers.boundedElastic())
               .subscribe();
 
-          final TransferResponse transferResponse = Mapper.entitiesToTransferResponse(
-              transactionId, fromAccount, toAccount, request.amount(), transferDate.toString());
+          final TransferResponse transferResponse = entitiesToTransferResponse(fromAccount, toAccount, request.amount(), transferDate.toString());
           bacenClient.postNotification(transferResponse)
               .switchIfEmpty(queueService.send(PENDING, InputMessage.of(transferResponse), DLQ))
               .subscribe();
