@@ -1,7 +1,7 @@
 package andrelsf.github.com.mcaccounts.repositories;
 
 
-import andrelsf.github.com.mcaccounts.entities.AccountEntity;
+import andrelsf.github.com.mcaccounts.entities.domains.AccountEntity;
 import java.math.BigDecimal;
 import org.springframework.data.repository.reactive.ReactiveCrudRepository;
 import org.springframework.stereotype.Repository;

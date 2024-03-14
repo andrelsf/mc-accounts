@@ -1,4 +1,4 @@
-package andrelsf.github.com.mcaccounts.entities;
+package andrelsf.github.com.mcaccounts.entities.domains;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -177,12 +177,14 @@ public class AccountEntity {
         '}';
   }
 
-  public void debit(BigDecimal amount) {
+  public void debit(BigDecimal amount, LocalDateTime lastUpdated) {
     this.balance = this.balance.subtract(amount);
+    this.lastUpdated = lastUpdated;
   }
 
-  public void credit(BigDecimal amount) {
+  public void credit(BigDecimal amount, LocalDateTime lastUpdated) {
     this.balance = this.balance.add(amount);
+    this.lastUpdated = lastUpdated;
   }
 
   public void decreaseDailyTransferLimit(BigDecimal amount) {

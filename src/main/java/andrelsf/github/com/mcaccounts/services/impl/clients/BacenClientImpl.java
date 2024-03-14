@@ -12,6 +12,7 @@ import org.springframework.web.reactive.function.client.ClientResponse;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Schedulers;
+import reactor.util.retry.Retry;
 
 @Service
 public class BacenClientImpl implements BacenClient {
@@ -41,11 +42,8 @@ public class BacenClientImpl implements BacenClient {
         .retrieve()
         .onStatus(HttpStatusCode::isError, this::postNotificationError)
         .bodyToMono(Void.class)
-        .transform(object ->
-            apiBacenCircuitBreaker.run(object, this::postNotificationFallback))
         .publishOn(Schedulers.boundedElastic())
-        .doOnError(throwable ->
-            logger.error(BACEN_ERROR_MESSAGE, throwable.getMessage()));
+        .transform(object -> apiBacenCircuitBreaker.run(object, this::postNotificationFallback));
   }
 
   private Mono<Void> postNotificationFallback(Throwable te) {
@@ -55,7 +53,9 @@ public class BacenClientImpl implements BacenClient {
 
   private Mono<? extends Throwable> postNotificationError(ClientResponse clientResponse) {
     return clientResponse.createException()
-        .flatMap(ex -> Mono.error(new IntegrationException(
-            "Error while performing the notification Bacen.")));
+        .flatMap(ex -> {
+          logger.error(BACEN_ERROR_MESSAGE, ex.getMessage());
+          return Mono.error(new IntegrationException(BACEN_ERROR_MESSAGE));
+        });
   }
 }

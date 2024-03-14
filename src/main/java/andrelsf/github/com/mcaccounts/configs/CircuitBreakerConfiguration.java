@@ -45,13 +45,13 @@ public class CircuitBreakerConfiguration {
       factory.configure(builder -> builder.circuitBreakerConfig(config)
           .timeLimiterConfig(TimeLimiterConfig.custom()
               .timeoutDuration(Duration.ofSeconds(2))
-              .build()), "apiBacen");
+              .build()), bacenConfig.getBackendName());
     };
   }
 
   @Bean
   public ReactiveCircuitBreaker apiBacenCircuitBreaker(ReactiveCircuitBreakerFactory reactiveCircuitBreakerFactory) {
-    return reactiveCircuitBreakerFactory.create("apiBacen");
+    return reactiveCircuitBreakerFactory.create(bacenConfig.getBackendName());
   }
 
   @Bean

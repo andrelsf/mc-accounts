@@ -1,4 +1,4 @@
-package andrelsf.github.com.mcaccounts.entities;
+package andrelsf.github.com.mcaccounts.entities.domains;
 
 public enum AccountStatus {
   ACTIVE,

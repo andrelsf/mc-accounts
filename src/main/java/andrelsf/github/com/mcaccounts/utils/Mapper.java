@@ -5,7 +5,7 @@ import andrelsf.github.com.mcaccounts.api.http.responses.CustomerResponse;
 import andrelsf.github.com.mcaccounts.api.http.responses.FromAccountResponse;
 import andrelsf.github.com.mcaccounts.api.http.responses.ToAccountResponse;
 import andrelsf.github.com.mcaccounts.api.http.responses.TransferResponse;
-import andrelsf.github.com.mcaccounts.entities.AccountEntity;
+import andrelsf.github.com.mcaccounts.entities.domains.AccountEntity;
 import java.math.BigDecimal;
 
 public class Mapper {

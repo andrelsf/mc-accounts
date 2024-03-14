@@ -36,6 +36,7 @@ management:
 
 circuit-breakers:
   api-bacen:
+    backendName: ${CB_API_BACEN_BACKEND_NAME:apiBacenCB}
     slidingWindowSize: ${CB_API_BACEN_SWS:6}
     minimumNumberOfCalls: ${CB_API_BACEN_MNOC:3}
     failureRateThreshold: ${CB_API_BACEN_FRT:50.0}

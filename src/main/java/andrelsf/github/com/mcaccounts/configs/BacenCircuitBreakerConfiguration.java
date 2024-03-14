@@ -7,9 +7,9 @@ import org.springframework.stereotype.Component;
 @ConfigurationProperties(prefix = "circuit-breakers.api-bacen")
 public class BacenCircuitBreakerConfiguration {
 
+  private String backendName;
   private int slidingWindowSize;
   private int minimumNumberOfCalls;
-
   private float failureRateThreshold;
   private int permittedNumberOfCallsInHalfOpenState;
   private long waitDurationInOpenState;
@@ -19,16 +19,26 @@ public class BacenCircuitBreakerConfiguration {
   }
 
   public BacenCircuitBreakerConfiguration(
+      String backendName,
       int slidingWindowSize,
       int minimumNumberOfCalls,
       float failureRateThreshold,
       int permittedNumberOfCallsInHalfOpenState,
       long waitDurationInOpenState) {
+    this.backendName = backendName;
     this.slidingWindowSize = slidingWindowSize;
     this.minimumNumberOfCalls = minimumNumberOfCalls;
     this.failureRateThreshold = failureRateThreshold;
     this.permittedNumberOfCallsInHalfOpenState = permittedNumberOfCallsInHalfOpenState;
     this.waitDurationInOpenState = waitDurationInOpenState;
+  }
+
+  public String getBackendName() {
+    return backendName;
+  }
+
+  public void setBackendName(String backendName) {
+    this.backendName = backendName;
   }
 
   public int getSlidingWindowSize() {
