@@ -108,6 +108,14 @@
 			</exclusions>
 		</dependency>
 
+		<!-- Mock Web Server -->
+		<dependency>
+			<groupId>com.squareup.okhttp3</groupId>
+			<artifactId>mockwebserver</artifactId>
+			<version>4.12.0</version>
+			<scope>test</scope>
+		</dependency>
+
 		<dependency>
 			<groupId>io.projectreactor</groupId>
 			<artifactId>reactor-test</artifactId>

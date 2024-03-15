@@ -1,4 +1,4 @@
-package andrelsf.github.com.mcaccounts.services.imp;
+package andrelsf.github.com.mcaccounts.services.impl;
 
 import static andrelsf.github.com.mcaccounts.entities.domains.AccountStatus.ACTIVE;
 import static andrelsf.github.com.mcaccounts.entities.events.StatusMessage.PENDING;
@@ -21,7 +21,6 @@ import andrelsf.github.com.mcaccounts.repositories.AccountRepository;
 import andrelsf.github.com.mcaccounts.services.BacenClient;
 import andrelsf.github.com.mcaccounts.services.CustomerClient;
 import andrelsf.github.com.mcaccounts.services.QueueService;
-import andrelsf.github.com.mcaccounts.services.impl.AccountServiceImpl;
 import andrelsf.github.com.mcaccounts.utils.ApiUtils;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
