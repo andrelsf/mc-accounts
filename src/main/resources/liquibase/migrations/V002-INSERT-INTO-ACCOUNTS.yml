@@ -59,3 +59,30 @@ databaseChangeLog:
               - column:
                   name: balance
                   value: 3000.00
+        - insert:
+            tableName: accounts
+            catalogName: accounts
+            dbms: 'postgresql'
+            schemaName: public
+            columns:
+              - column:
+                  name: account_id
+                  value: "18f6ce5ff40b47dca36b4b123d459c49"
+              - column:
+                  name: customer_id
+                  value: "0ab4165471c445918697d3d620b0db2c"
+              - column:
+                  name: agency
+                  value: 4321
+              - column:
+                  name: account_number
+                  value: 05990027
+              - column:
+                  name: status
+                  value: "ACTIVE"
+              - column:
+                  name: daily_transfer_limit
+                  value: 1000.00
+              - column:
+                  name: balance
+                  value: 5000.00
