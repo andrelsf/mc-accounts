@@ -4,8 +4,10 @@ import static andrelsf.github.com.mcaccounts.entities.domains.AccountStatus.ACTI
 import static andrelsf.github.com.mcaccounts.entities.events.StatusMessage.PENDING;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.mockito.Mockito.when;
 
+import andrelsf.github.com.mcaccounts.api.http.requests.PatchTransferLimitRequest;
 import andrelsf.github.com.mcaccounts.api.http.requests.PostTransferRequest;
 import andrelsf.github.com.mcaccounts.api.http.requests.ToAccountRequest;
 import andrelsf.github.com.mcaccounts.api.http.responses.BalanceResponse;
@@ -35,6 +37,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import reactor.core.publisher.MonoSink;
 
 @ExtendWith(MockitoExtension.class)
 public class AccountServiceImplTest {
@@ -99,6 +102,26 @@ public class AccountServiceImplTest {
     assertThatThrownBy(() -> accountService.checkAccountBalance(customerId).block())
         .isInstanceOf(AccountNotFoundException.class)
         .hasMessage("Account not found by customerId=".concat(customerId));
+  }
+
+  @Test
+  @DisplayName("Deve realizar a atualizacao do limite de transferencia para um cliente valido")
+  void test_updateTransferLimit_success() {
+    final BigDecimal amount = BigDecimal.valueOf(1000.0F);
+    final PatchTransferLimitRequest transferLimitRequest = new PatchTransferLimitRequest(amount);
+    final String customerId = UUID.randomUUID().toString();
+    AccountEntity account = buildAccountEntity(customerId);
+
+    when(repository.findAccountEntityByCustomerIdAndStatusIs(customerId, ACTIVE.name()))
+        .thenReturn(Mono.just(account));
+
+    account.setDailyTransferLimit(amount);
+
+    when(repository.save(account))
+        .thenReturn(Mono.create(MonoSink::success));
+
+    assertDoesNotThrow(() ->
+        accountService.updateTransferLimit(customerId, transferLimitRequest).block());
   }
 
   @Test

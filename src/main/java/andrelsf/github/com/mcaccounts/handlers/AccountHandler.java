@@ -1,5 +1,6 @@
 package andrelsf.github.com.mcaccounts.handlers;
 
+import andrelsf.github.com.mcaccounts.api.http.requests.PatchTransferLimitRequest;
 import andrelsf.github.com.mcaccounts.api.http.requests.PostTransferRequest;
 import andrelsf.github.com.mcaccounts.services.AccountService;
 import andrelsf.github.com.mcaccounts.services.impl.validator.RequestValidator;
@@ -30,6 +31,17 @@ public class AccountHandler {
             ServerResponse.ok()
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(BodyInserters.fromValue(balanceResponse)))
+        .switchIfEmpty(ServerResponse.notFound().build());
+  }
+
+  public Mono<ServerResponse> patchTransferLimits(final ServerRequest request) {
+    final String customerId = request.pathVariable("customerId");
+    return request.bodyToMono(PatchTransferLimitRequest.class)
+        .doOnNext(requestValidator::validate)
+        .cast(PatchTransferLimitRequest.class)
+        .flatMap(patchTransferLimitRequest ->
+            accountService.updateTransferLimit(customerId, patchTransferLimitRequest))
+        .then(Mono.defer(() -> ServerResponse.noContent().build()))
         .switchIfEmpty(ServerResponse.notFound().build());
   }
 

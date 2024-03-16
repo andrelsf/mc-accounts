@@ -19,6 +19,7 @@ public class AccountResource {
         .path("/accounts/{customerId}", builder -> builder
             .GET("/balance", accept(APPLICATION_JSON), accountHandler::getBalance)
             .POST("/transfers", accept(APPLICATION_JSON), accountHandler::postTransfers)
+            .PATCH("/transfer-limits", accept(APPLICATION_JSON), accountHandler::patchTransferLimits)
         ).build();
   }
 }
