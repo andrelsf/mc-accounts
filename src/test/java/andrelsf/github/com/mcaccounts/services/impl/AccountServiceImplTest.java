@@ -125,8 +125,7 @@ public class AccountServiceImplTest {
   }
 
   @Test
-  @DisplayName("Dado um customerId e dados para transferencia validos deve realizar a transferrencia"
-      + " entre contas.")
+  @DisplayName("Dado um customerId e dados para transferencia validos deve realizar a transferrencia entre contas.")
   void test_doTransfer_success() {
     final String customerId = UUID.randomUUID().toString();
     final PostTransferRequest request = buildTransferRequest();

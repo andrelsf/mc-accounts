@@ -93,7 +93,6 @@ public class AccountServiceImpl implements AccountService {
                 request.toAccount().agency(), request.toAccount().accountNumber(), ACTIVE.name())
                 .switchIfEmpty(error(new ToAccountNotFoundException("To Account not found by Agency and Account Number.")))
         )
-
         .flatMap(tuple -> {
           final LocalDateTime transferDate = getLocalDateTimeNow();
           AccountEntity fromAccount = tuple.getT1();

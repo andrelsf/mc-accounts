@@ -30,8 +30,7 @@ public class AccountHandler {
         .flatMap(balanceResponse ->
             ServerResponse.ok()
                 .contentType(MediaType.APPLICATION_JSON)
-                .body(BodyInserters.fromValue(balanceResponse)))
-        .switchIfEmpty(ServerResponse.notFound().build());
+                .body(BodyInserters.fromValue(balanceResponse)));
   }
 
   public Mono<ServerResponse> patchTransferLimits(final ServerRequest request) {
@@ -41,8 +40,7 @@ public class AccountHandler {
         .cast(PatchTransferLimitRequest.class)
         .flatMap(patchTransferLimitRequest ->
             accountService.updateTransferLimit(customerId, patchTransferLimitRequest))
-        .then(Mono.defer(() -> ServerResponse.noContent().build()))
-        .switchIfEmpty(ServerResponse.notFound().build());
+        .then(Mono.defer(() -> ServerResponse.noContent().build()));
   }
 
   public Mono<ServerResponse> postTransfers(final ServerRequest request) {
@@ -50,11 +48,11 @@ public class AccountHandler {
     return request.bodyToMono(PostTransferRequest.class)
         .doOnNext(requestValidator::validate)
         .cast(PostTransferRequest.class)
-        .flatMap(postTransferRequest -> accountService.doTransfer(customerId, postTransferRequest))
+        .flatMap(postTransferRequest ->
+            accountService.doTransfer(customerId, postTransferRequest))
         .flatMap(transferResponse ->
             ServerResponse.ok()
                 .contentType(MediaType.APPLICATION_JSON)
-                .body(BodyInserters.fromValue(transferResponse)))
-        .switchIfEmpty(ServerResponse.unprocessableEntity().build());
+                .body(BodyInserters.fromValue(transferResponse)));
   }
 }
