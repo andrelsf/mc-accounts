@@ -37,7 +37,6 @@ public class RequestValidatorTest {
     return new PostTransferRequest(
         new ToAccountRequest(
             "Alice",
-            "22233344455",
             321,
             7654321),
         BigDecimal.valueOf(100.00f)
