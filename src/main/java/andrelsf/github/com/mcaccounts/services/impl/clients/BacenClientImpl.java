@@ -22,7 +22,7 @@ public class BacenClientImpl implements BacenClient {
 
   static {
     URI_BACEN = "/api/v1/bacen/notifications";
-    BACEN_ERROR_MESSAGE = "Error while performing the notification Bacen. {}";
+    BACEN_ERROR_MESSAGE = "Error while performing the notification Bacen.";
   }
 
   private final WebClient apiBacen;
@@ -47,13 +47,13 @@ public class BacenClientImpl implements BacenClient {
 
   private Mono<Void> postNotificationFallback(Throwable te) {
     logger.warn("Method fallback called. {}", te.getMessage());
-    return Mono.empty();
+    return Mono.error(new IntegrationException(BACEN_ERROR_MESSAGE));
   }
 
   private Mono<? extends Throwable> postNotificationError(ClientResponse clientResponse) {
     return clientResponse.createException()
         .flatMap(ex -> {
-          logger.error(BACEN_ERROR_MESSAGE, ex.getMessage());
+          logger.error(BACEN_ERROR_MESSAGE.concat(" {}"), ex.getMessage());
           return Mono.error(new IntegrationException(BACEN_ERROR_MESSAGE));
         });
   }

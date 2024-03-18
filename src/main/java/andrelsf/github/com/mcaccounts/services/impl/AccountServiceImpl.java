@@ -109,7 +109,8 @@ public class AccountServiceImpl implements AccountService {
           final TransferResponse transferResponse = entitiesToTransferResponse(
               fromAccount, toAccount, request.amount(), transferDate.toString());
           bacenClient.postNotification(transferResponse)
-              .switchIfEmpty(queueService.send(PENDING, InputMessage.of(transferResponse), DLQ))
+              .publishOn(Schedulers.boundedElastic())
+              .doOnError(ex -> queueService.send(PENDING, InputMessage.of(transferResponse), DLQ))
               .subscribe();
           return Mono.just(transferResponse);
         });

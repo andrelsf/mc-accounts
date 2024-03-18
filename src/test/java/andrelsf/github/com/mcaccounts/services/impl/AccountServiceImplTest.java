@@ -1,7 +1,6 @@
 package andrelsf.github.com.mcaccounts.services.impl;
 
 import static andrelsf.github.com.mcaccounts.entities.domains.AccountStatus.ACTIVE;
-import static andrelsf.github.com.mcaccounts.entities.events.StatusMessage.PENDING;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
@@ -16,8 +15,6 @@ import andrelsf.github.com.mcaccounts.api.http.responses.FromAccountResponse;
 import andrelsf.github.com.mcaccounts.api.http.responses.ToAccountResponse;
 import andrelsf.github.com.mcaccounts.api.http.responses.TransferResponse;
 import andrelsf.github.com.mcaccounts.entities.domains.AccountEntity;
-import andrelsf.github.com.mcaccounts.entities.events.InputMessage;
-import andrelsf.github.com.mcaccounts.entities.events.QueueType;
 import andrelsf.github.com.mcaccounts.handlers.exceptions.AccountNotFoundException;
 import andrelsf.github.com.mcaccounts.repositories.AccountRepository;
 import andrelsf.github.com.mcaccounts.services.BacenClient;
@@ -146,9 +143,6 @@ public class AccountServiceImplTest {
         .thenReturn(Flux.just(fromAccount, toAccount));
 
     when(bacenClient.postNotification(transferResponseMock))
-        .thenReturn(Mono.empty());
-
-    when(queueService.send(PENDING, InputMessage.of(transferResponseMock), QueueType.DLQ))
         .thenReturn(Mono.empty());
 
     final TransferResponse transferResponse = accountService.doTransfer(customerId, request)
