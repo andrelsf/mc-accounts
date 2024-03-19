@@ -95,6 +95,13 @@
 			<optional>true</optional>
 		</dependency>
 
+		<!-- Native Maven Plugin -->
+		<dependency>
+			<groupId>org.graalvm.buildtools</groupId>
+			<artifactId>native-maven-plugin</artifactId>
+			<version>0.10.1</version>
+		</dependency>
+
 		<!-- TESTs -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -116,6 +123,7 @@
 			<scope>test</scope>
 		</dependency>
 
+		<!-- Reactor Test -->
 		<dependency>
 			<groupId>io.projectreactor</groupId>
 			<artifactId>reactor-test</artifactId>
