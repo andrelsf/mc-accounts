@@ -6,6 +6,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import andrelsf.github.com.mcaccounts.api.http.responses.CustomerResponse;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.github.resilience4j.circuitbreaker.CircuitBreakerRegistry;
+import io.github.resilience4j.timelimiter.TimeLimiterRegistry;
 import java.io.IOException;
 import java.util.UUID;
 import okhttp3.mockwebserver.MockResponse;
@@ -17,6 +19,9 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.cloud.circuitbreaker.resilience4j.ReactiveResilience4JCircuitBreakerFactory;
+import org.springframework.cloud.circuitbreaker.resilience4j.Resilience4JConfigurationProperties;
+import org.springframework.cloud.client.circuitbreaker.ReactiveCircuitBreaker;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -27,6 +32,8 @@ public class CustomerClientImplTest {
   private static MockWebServer mockWebServer;
 
   private WebClient webClient;
+
+  private ReactiveCircuitBreaker apiCustomersCircuitBreaker;
 
   private CustomerClientImpl customerClient;
 
@@ -47,7 +54,14 @@ public class CustomerClientImplTest {
     webClient = WebClient.builder()
         .baseUrl(baseUrl)
         .build();
-    customerClient = new CustomerClientImpl(webClient);
+
+    final CircuitBreakerRegistry registry = CircuitBreakerRegistry.ofDefaults();
+    final TimeLimiterRegistry timeLimiterRegistry = TimeLimiterRegistry.ofDefaults();
+    final Resilience4JConfigurationProperties properties = new Resilience4JConfigurationProperties();
+    apiCustomersCircuitBreaker =
+        new ReactiveResilience4JCircuitBreakerFactory(registry, timeLimiterRegistry, properties)
+          .create("testCB");
+    customerClient = new CustomerClientImpl(webClient, apiCustomersCircuitBreaker);
   }
 
   @Test

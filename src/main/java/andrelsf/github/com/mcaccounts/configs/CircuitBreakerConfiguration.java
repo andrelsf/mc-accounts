@@ -25,9 +25,13 @@ public class CircuitBreakerConfiguration {
   private final static Logger logger = LoggerFactory.getLogger(CircuitBreakerConfiguration.class);
 
   private final BacenCircuitBreakerConfiguration bacenConfig;
+  private final CustomersCircuitBreakerConfiguration customersConfig;
 
-  public CircuitBreakerConfiguration(BacenCircuitBreakerConfiguration bacenConfig) {
+  public CircuitBreakerConfiguration(
+      BacenCircuitBreakerConfiguration bacenConfig,
+      CustomersCircuitBreakerConfiguration customersConfig) {
     this.bacenConfig = bacenConfig;
+    this.customersConfig = customersConfig;
   }
 
   @Bean
@@ -50,8 +54,32 @@ public class CircuitBreakerConfiguration {
   }
 
   @Bean
+  public Customizer<ReactiveResilience4JCircuitBreakerFactory> customersCircuitBreaker() {
+    final CircuitBreakerConfig config = CircuitBreakerConfig.custom()
+        .slidingWindowType(COUNT_BASED)
+        .slidingWindowSize(customersConfig.getSlidingWindowSize())
+        .minimumNumberOfCalls(customersConfig.getMinimumNumberOfCalls())
+        .failureRateThreshold(customersConfig.getFailureRateThreshold())
+        .permittedNumberOfCallsInHalfOpenState(
+            customersConfig.getPermittedNumberOfCallsInHalfOpenState())
+        .waitDurationInOpenState(Duration.ofSeconds(customersConfig.getWaitDurationInOpenState()))
+        .build();
+    return factory -> {
+      factory.configure(builder -> builder.circuitBreakerConfig(config)
+          .timeLimiterConfig(TimeLimiterConfig.custom()
+              .timeoutDuration(Duration.ofSeconds(2))
+              .build()), customersConfig.getBackendName());
+    };
+  }
+
+  @Bean
   public ReactiveCircuitBreaker apiBacenCircuitBreaker(ReactiveCircuitBreakerFactory reactiveCircuitBreakerFactory) {
     return reactiveCircuitBreakerFactory.create(bacenConfig.getBackendName());
+  }
+
+  @Bean
+  public ReactiveCircuitBreaker apiCustomersBacenCircuitBreaker(ReactiveCircuitBreakerFactory reactiveCircuitBreakerFactory) {
+    return reactiveCircuitBreakerFactory.create(customersConfig.getBackendName());
   }
 
   @Bean

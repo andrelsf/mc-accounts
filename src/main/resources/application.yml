@@ -40,8 +40,15 @@ circuit-breakers:
     slidingWindowSize: ${CB_API_BACEN_SWS:6}
     minimumNumberOfCalls: ${CB_API_BACEN_MNOC:3}
     failureRateThreshold: ${CB_API_BACEN_FRT:50.0}
-    permittedNumberOfCallsInHalfOpenState: ${CB_API_BACEN_PNOCIHOS:3}
+    permittedNumberOfCallsInHalfOpenState: ${CB_API_BACEN_PNOCIHOS:2}
     waitDurationInOpenState: ${CB_API_BACEN_WDIOS:10}
+  customers:
+    backendName: ${CB_API_CUSTOMERS_BACKEND_NAME:apiCustomersCB}
+    slidingWindowSize: ${CB_API_CUSTOMERS_SWS:6}
+    minimumNumberOfCalls: ${CB_API_CUSTOMERS_MNOC:3}
+    failureRateThreshold: ${CB_API_CUSTOMERS_FRT:50.0}
+    permittedNumberOfCallsInHalfOpenState: ${CB_API_CUSTOMERS_PNOCIHOS:2}
+    waitDurationInOpenState: ${CB_API_CUSTOMERS_WDIOS:10}
 
 integrations:
   apis:
